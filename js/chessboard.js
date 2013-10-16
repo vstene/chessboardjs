@@ -186,6 +186,7 @@ function objToFen(obj) {
 }
 
 window['ChessBoard'] = window['ChessBoard'] || function(containerElOrId, cfg) {
+'use strict';
 
 cfg = cfg || {};
 
@@ -199,7 +200,6 @@ var MINIMUM_JQUERY_VERSION = '1.7.0',
 
 // use unique class names to prevent clashing with anything else on the page
 // and simplify selectors
-// NOTE: these should never change
 var CSS = {
   alpha: 'alpha-d2270',
   black: 'black-3c85d',
@@ -689,16 +689,16 @@ function buildSparePieces(color) {
 
 function animateSquareToSquare(src, dest, piece, completeFn) {
   // get information about the source and destination squares
-  var srcSquareEl = boardEl.find('#' + SQUARE_ELS_IDS[src]);
+  var srcSquareEl = containerEl.find('#' + SQUARE_ELS_IDS[src]);
   var srcSquarePosition = srcSquareEl.offset();
-  var destSquareEl = boardEl.find('#' + SQUARE_ELS_IDS[dest]);
+  var destSquareEl = containerEl.find('#' + SQUARE_ELS_IDS[dest]);
   var destSquarePosition = destSquareEl.offset();
 
   // create the animated piece and absolutely position it
   // over the source square
   var animatedPieceId = createId();
   $('body').append(buildPiece(piece, true, animatedPieceId));
-  var animatedPieceEl = boardEl.find('#' + animatedPieceId);
+  var animatedPieceEl = $('#' + animatedPieceId);
   animatedPieceEl.css({
     display: '',
     position: 'absolute',
@@ -732,14 +732,14 @@ function animateSquareToSquare(src, dest, piece, completeFn) {
 }
 
 function animateSparePieceToSquare(piece, dest, completeFn) {
-  var srcOffset = boardEl.find('#' + SPARE_PIECE_ELS_IDS[piece]).offset();
-  var destSquareEl = boardEl.find('#' + SQUARE_ELS_IDS[dest]);
+  var srcOffset = $('#' + SPARE_PIECE_ELS_IDS[piece]).offset();
+  var destSquareEl = containerEl.find('#' + SQUARE_ELS_IDS[dest]);
   var destOffset = destSquareEl.offset();
 
   // create the animate piece
   var pieceId = createId();
   $('body').append(buildPiece(piece, true, pieceId));
-  var animatedPieceEl = boardEl.find('#' + pieceId);
+  var animatedPieceEl = $('#' + pieceId);
   animatedPieceEl.css({
     display: '',
     position: 'absolute',
@@ -794,13 +794,13 @@ function doAnimations(a, oldPos, newPos) {
   for (var i = 0; i < a.length; i++) {
     // clear a piece
     if (a[i].type === 'clear') {
-      boardEl.find('#' + SQUARE_ELS_IDS[a[i].square] + ' .' + CSS.piece)
+      containerEl.find('#' + SQUARE_ELS_IDS[a[i].square] + ' .' + CSS.piece)
         .fadeOut(cfg.trashSpeed, onFinish);
     }
 
     // add a piece (no spare pieces)
     if (a[i].type === 'add' && cfg.sparePieces !== true) {
-      boardEl.find('#' + SQUARE_ELS_IDS[a[i].square])
+      containerEl.find('#' + SQUARE_ELS_IDS[a[i].square])
         .append(buildPiece(a[i].piece, true))
         .find('.' + CSS.piece)
         .fadeIn(cfg.appearSpeed, onFinish);
@@ -971,7 +971,7 @@ function drawPositionInstant() {
   for (var i in CURRENT_POSITION) {
     if (CURRENT_POSITION.hasOwnProperty(i) !== true) continue;
 
-    boardEl.find('#' + SQUARE_ELS_IDS[i]).append(buildPiece(CURRENT_POSITION[i]));
+    containerEl.find('#' + SQUARE_ELS_IDS[i]).append(buildPiece(CURRENT_POSITION[i]));
   }
 }
 
@@ -1050,7 +1050,7 @@ function captureSquareOffsets() {
   for (var i in SQUARE_ELS_IDS) {
     if (SQUARE_ELS_IDS.hasOwnProperty(i) !== true) continue;
 
-    SQUARE_ELS_OFFSETS[i] = boardEl.find('#' + SQUARE_ELS_IDS[i]).offset();
+    SQUARE_ELS_OFFSETS[i] = $('#' + SQUARE_ELS_IDS[i]).offset();
   }
 }
 
@@ -1083,7 +1083,7 @@ function snapbackDraggedPiece() {
 
   // get source square position
   var sourceSquarePosition =
-    boardEl.find('#' + SQUARE_ELS_IDS[DRAGGED_PIECE_SOURCE]).offset();
+    $('#' + SQUARE_ELS_IDS[DRAGGED_PIECE_SOURCE]).offset();
 
   // animate the piece to the target square
   var opts = {
@@ -1124,7 +1124,7 @@ function dropDraggedPieceOnSquare(square) {
   setCurrentPosition(newPosition);
 
   // get target square information
-  var targetSquarePosition = boardEl.find('#' + SQUARE_ELS_IDS[square]).offset();
+  var targetSquarePosition = $('#' + SQUARE_ELS_IDS[square]).offset();
 
   // animation complete
   var complete = function() {
@@ -1185,7 +1185,7 @@ function beginDraggingPiece(source, piece, x, y) {
 
   if (source !== 'spare') {
     // highlight the source square and hide the piece
-    boardEl.find('#' + SQUARE_ELS_IDS[source]).addClass(CSS.highlight1)
+    containerEl.find('#' + SQUARE_ELS_IDS[source]).addClass(CSS.highlight1)
       .find('.' + CSS.piece).css('display', 'none');
   }
 }
@@ -1205,13 +1205,13 @@ function updateDraggedPiece(x, y) {
 
   // remove highlight from previous square
   if (validSquare(DRAGGED_PIECE_LOCATION) === true) {
-    boardEl.find('#' + SQUARE_ELS_IDS[DRAGGED_PIECE_LOCATION])
+    containerEl.find('#' + SQUARE_ELS_IDS[DRAGGED_PIECE_LOCATION])
       .removeClass(CSS.highlight2);
   }
 
   // add highlight to new square
   if (validSquare(location) === true) {
-    boardEl.find('#' + SQUARE_ELS_IDS[location]).addClass(CSS.highlight2);
+    containerEl.find('#' + SQUARE_ELS_IDS[location]).addClass(CSS.highlight2);
   }
 
   // run onDragMove
@@ -1293,6 +1293,17 @@ function stopDraggedPiece(location) {
 widget.clear = function(useAnimation) {
   widget.position({}, useAnimation);
 };
+
+/*
+// get or set config properties
+// TODO: write this, GitHub Issue #1
+widget.config = function(arg1, arg2) {
+  // get the current config
+  if (arguments.length === 0) {
+    return deepCopy(cfg);
+  }
+};
+*/
 
 // remove the widget from the page
 widget.destroy = function() {
@@ -1656,9 +1667,6 @@ function addEvents() {
 }
 
 function initDom() {
-  // create unique IDs for all the elements we will create
-  createElIds();
-
   // build board and save it in memory
   containerEl.html(buildBoardContainer());
   boardEl = containerEl.find('.' + CSS.board);
@@ -1671,7 +1679,7 @@ function initDom() {
   // create the drag piece
   var draggedPieceId = createId();
   $('body').append(buildPiece('wP', true, draggedPieceId));
-  draggedPieceEl = boardEl.find('#' + draggedPieceId);
+  draggedPieceEl = $('#' + draggedPieceId);
 
   // get the border size
   BOARD_BORDER_SIZE = parseInt(boardEl.css('borderLeftWidth'), 10);
@@ -1683,6 +1691,9 @@ function initDom() {
 function init() {
   if (checkDeps() !== true ||
       expandConfig() !== true) return;
+
+  // create unique IDs for all the elements we will create
+  createElIds();
 
   initDom();
   addEvents();
