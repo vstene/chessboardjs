@@ -689,16 +689,16 @@ function buildSparePieces(color) {
 
 function animateSquareToSquare(src, dest, piece, completeFn) {
   // get information about the source and destination squares
-  var srcSquareEl = $('#' + SQUARE_ELS_IDS[src]);
+  var srcSquareEl = boardEl.find('#' + SQUARE_ELS_IDS[src]);
   var srcSquarePosition = srcSquareEl.offset();
-  var destSquareEl = $('#' + SQUARE_ELS_IDS[dest]);
+  var destSquareEl = boardEl.find('#' + SQUARE_ELS_IDS[dest]);
   var destSquarePosition = destSquareEl.offset();
 
   // create the animated piece and absolutely position it
   // over the source square
   var animatedPieceId = createId();
   $('body').append(buildPiece(piece, true, animatedPieceId));
-  var animatedPieceEl = $('#' + animatedPieceId);
+  var animatedPieceEl = boardEl.find('#' + animatedPieceId);
   animatedPieceEl.css({
     display: '',
     position: 'absolute',
@@ -732,14 +732,14 @@ function animateSquareToSquare(src, dest, piece, completeFn) {
 }
 
 function animateSparePieceToSquare(piece, dest, completeFn) {
-  var srcOffset = $('#' + SPARE_PIECE_ELS_IDS[piece]).offset();
-  var destSquareEl = $('#' + SQUARE_ELS_IDS[dest]);
+  var srcOffset = boardEl.find('#' + SPARE_PIECE_ELS_IDS[piece]).offset();
+  var destSquareEl = boardEl.find('#' + SQUARE_ELS_IDS[dest]);
   var destOffset = destSquareEl.offset();
 
   // create the animate piece
   var pieceId = createId();
   $('body').append(buildPiece(piece, true, pieceId));
-  var animatedPieceEl = $('#' + pieceId);
+  var animatedPieceEl = boardEl.find('#' + pieceId);
   animatedPieceEl.css({
     display: '',
     position: 'absolute',
@@ -794,13 +794,13 @@ function doAnimations(a, oldPos, newPos) {
   for (var i = 0; i < a.length; i++) {
     // clear a piece
     if (a[i].type === 'clear') {
-      $('#' + SQUARE_ELS_IDS[a[i].square] + ' .' + CSS.piece)
+      boardEl.find('#' + SQUARE_ELS_IDS[a[i].square] + ' .' + CSS.piece)
         .fadeOut(cfg.trashSpeed, onFinish);
     }
 
     // add a piece (no spare pieces)
     if (a[i].type === 'add' && cfg.sparePieces !== true) {
-      $('#' + SQUARE_ELS_IDS[a[i].square])
+      boardEl.find('#' + SQUARE_ELS_IDS[a[i].square])
         .append(buildPiece(a[i].piece, true))
         .find('.' + CSS.piece)
         .fadeIn(cfg.appearSpeed, onFinish);
@@ -971,7 +971,7 @@ function drawPositionInstant() {
   for (var i in CURRENT_POSITION) {
     if (CURRENT_POSITION.hasOwnProperty(i) !== true) continue;
 
-    $('#' + SQUARE_ELS_IDS[i]).append(buildPiece(CURRENT_POSITION[i]));
+    boardEl.find('#' + SQUARE_ELS_IDS[i]).append(buildPiece(CURRENT_POSITION[i]));
   }
 }
 
@@ -1050,7 +1050,7 @@ function captureSquareOffsets() {
   for (var i in SQUARE_ELS_IDS) {
     if (SQUARE_ELS_IDS.hasOwnProperty(i) !== true) continue;
 
-    SQUARE_ELS_OFFSETS[i] = $('#' + SQUARE_ELS_IDS[i]).offset();
+    SQUARE_ELS_OFFSETS[i] = boardEl.find('#' + SQUARE_ELS_IDS[i]).offset();
   }
 }
 
@@ -1083,7 +1083,7 @@ function snapbackDraggedPiece() {
 
   // get source square position
   var sourceSquarePosition =
-    $('#' + SQUARE_ELS_IDS[DRAGGED_PIECE_SOURCE]).offset();
+    boardEl.find('#' + SQUARE_ELS_IDS[DRAGGED_PIECE_SOURCE]).offset();
 
   // animate the piece to the target square
   var opts = {
@@ -1124,7 +1124,7 @@ function dropDraggedPieceOnSquare(square) {
   setCurrentPosition(newPosition);
 
   // get target square information
-  var targetSquarePosition = $('#' + SQUARE_ELS_IDS[square]).offset();
+  var targetSquarePosition = boardEl.find('#' + SQUARE_ELS_IDS[square]).offset();
 
   // animation complete
   var complete = function() {
@@ -1185,7 +1185,7 @@ function beginDraggingPiece(source, piece, x, y) {
 
   if (source !== 'spare') {
     // highlight the source square and hide the piece
-    $('#' + SQUARE_ELS_IDS[source]).addClass(CSS.highlight1)
+    boardEl.find('#' + SQUARE_ELS_IDS[source]).addClass(CSS.highlight1)
       .find('.' + CSS.piece).css('display', 'none');
   }
 }
@@ -1205,13 +1205,13 @@ function updateDraggedPiece(x, y) {
 
   // remove highlight from previous square
   if (validSquare(DRAGGED_PIECE_LOCATION) === true) {
-    $('#' + SQUARE_ELS_IDS[DRAGGED_PIECE_LOCATION])
+    boardEl.find('#' + SQUARE_ELS_IDS[DRAGGED_PIECE_LOCATION])
       .removeClass(CSS.highlight2);
   }
 
   // add highlight to new square
   if (validSquare(location) === true) {
-    $('#' + SQUARE_ELS_IDS[location]).addClass(CSS.highlight2);
+    boardEl.find('#' + SQUARE_ELS_IDS[location]).addClass(CSS.highlight2);
   }
 
   // run onDragMove
@@ -1671,7 +1671,7 @@ function initDom() {
   // create the drag piece
   var draggedPieceId = createId();
   $('body').append(buildPiece('wP', true, draggedPieceId));
-  draggedPieceEl = $('#' + draggedPieceId);
+  draggedPieceEl = boardEl.find('#' + draggedPieceId);
 
   // get the border size
   BOARD_BORDER_SIZE = parseInt(boardEl.css('borderLeftWidth'), 10);
