@@ -1,11 +1,11 @@
 /*!
- * chessboard.js $version$
+ * chessboard.js v0.3.0
  *
  * Copyright 2013 Chris Oakman
  * Released under the MIT license
- * https://github.com/oakmac/chessboardjs/blob/master/LICENSE
+ * http://chessboardjs.com/license
  *
- * Date: $date$
+ * Date: 10 Aug 2013
  */
 
 // start anonymous scope
@@ -689,9 +689,9 @@ function buildSparePieces(color) {
 
 function animateSquareToSquare(src, dest, piece, completeFn) {
   // get information about the source and destination squares
-  var srcSquareEl = containerEl.find('#' + SQUARE_ELS_IDS[src]);
+  var srcSquareEl = $('#' + SQUARE_ELS_IDS[src]);
   var srcSquarePosition = srcSquareEl.offset();
-  var destSquareEl = containerEl.find('#' + SQUARE_ELS_IDS[dest]);
+  var destSquareEl = $('#' + SQUARE_ELS_IDS[dest]);
   var destSquarePosition = destSquareEl.offset();
 
   // create the animated piece and absolutely position it
@@ -733,7 +733,7 @@ function animateSquareToSquare(src, dest, piece, completeFn) {
 
 function animateSparePieceToSquare(piece, dest, completeFn) {
   var srcOffset = $('#' + SPARE_PIECE_ELS_IDS[piece]).offset();
-  var destSquareEl = containerEl.find('#' + SQUARE_ELS_IDS[dest]);
+  var destSquareEl = $('#' + SQUARE_ELS_IDS[dest]);
   var destOffset = destSquareEl.offset();
 
   // create the animate piece
@@ -794,13 +794,13 @@ function doAnimations(a, oldPos, newPos) {
   for (var i = 0; i < a.length; i++) {
     // clear a piece
     if (a[i].type === 'clear') {
-      containerEl.find('#' + SQUARE_ELS_IDS[a[i].square] + ' .' + CSS.piece)
+      $('#' + SQUARE_ELS_IDS[a[i].square] + ' .' + CSS.piece)
         .fadeOut(cfg.trashSpeed, onFinish);
     }
 
     // add a piece (no spare pieces)
     if (a[i].type === 'add' && cfg.sparePieces !== true) {
-      containerEl.find('#' + SQUARE_ELS_IDS[a[i].square])
+      $('#' + SQUARE_ELS_IDS[a[i].square])
         .append(buildPiece(a[i].piece, true))
         .find('.' + CSS.piece)
         .fadeIn(cfg.appearSpeed, onFinish);
@@ -971,7 +971,7 @@ function drawPositionInstant() {
   for (var i in CURRENT_POSITION) {
     if (CURRENT_POSITION.hasOwnProperty(i) !== true) continue;
 
-    containerEl.find('#' + SQUARE_ELS_IDS[i]).append(buildPiece(CURRENT_POSITION[i]));
+    $('#' + SQUARE_ELS_IDS[i]).append(buildPiece(CURRENT_POSITION[i]));
   }
 }
 
@@ -1185,7 +1185,7 @@ function beginDraggingPiece(source, piece, x, y) {
 
   if (source !== 'spare') {
     // highlight the source square and hide the piece
-    containerEl.find('#' + SQUARE_ELS_IDS[source]).addClass(CSS.highlight1)
+    $('#' + SQUARE_ELS_IDS[source]).addClass(CSS.highlight1)
       .find('.' + CSS.piece).css('display', 'none');
   }
 }
@@ -1205,13 +1205,13 @@ function updateDraggedPiece(x, y) {
 
   // remove highlight from previous square
   if (validSquare(DRAGGED_PIECE_LOCATION) === true) {
-    containerEl.find('#' + SQUARE_ELS_IDS[DRAGGED_PIECE_LOCATION])
+    $('#' + SQUARE_ELS_IDS[DRAGGED_PIECE_LOCATION])
       .removeClass(CSS.highlight2);
   }
 
   // add highlight to new square
   if (validSquare(location) === true) {
-    containerEl.find('#' + SQUARE_ELS_IDS[location]).addClass(CSS.highlight2);
+    $('#' + SQUARE_ELS_IDS[location]).addClass(CSS.highlight2);
   }
 
   // run onDragMove
