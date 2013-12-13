@@ -603,21 +603,6 @@ function buildBoard(orientation) {
         'id="' + SQUARE_ELS_IDS[square] + '" ' +
         'data-square="' + square + '">';
 
-      if (cfg.showNotation === true) {
-        // alpha notation
-        if ((orientation === 'white' && row === 1) ||
-            (orientation === 'black' && row === 8)) {
-          html += '<div class="' + CSS.notation + ' ' + CSS.alpha + '">' +
-            alpha[j] + '</div>';
-        }
-
-        // numeric notation
-        if (j === 0) {
-          html += '<div class="' + CSS.notation + ' ' + CSS.numeric + '">' +
-            row + '</div>';
-        }
-      }
-
       html += '</div>'; // end .square
 
       squareColor = (squareColor === 'white' ? 'black' : 'white');
@@ -964,14 +949,11 @@ function calculateAnimations(pos1, pos2) {
 //------------------------------------------------------------------------------
 
 function drawPositionInstant() {
-  // clear the board
-  boardEl.find('.' + CSS.piece).remove();
-
   // add the pieces
   for (var i in CURRENT_POSITION) {
     if (CURRENT_POSITION.hasOwnProperty(i) !== true) continue;
 
-    $('#' + SQUARE_ELS_IDS[i]).append(buildPiece(CURRENT_POSITION[i]));
+    $('#' + SQUARE_ELS_IDS[i]).html(buildPiece(CURRENT_POSITION[i]));
   }
 }
 
