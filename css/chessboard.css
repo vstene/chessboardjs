@@ -61,11 +61,17 @@
   font-size: 14px;
   position: absolute;
 }
+
 .alpha-d2270 {
   bottom: 1px;
   right: 3px;
 }
+
 .numeric-fc462 {
   top: 2px;
   left: 2px;
+}
+
+.piece-417db {
+    cursor: pointer;
 }
