@@ -506,8 +506,7 @@ function calculateSquareSize() {
     return 0;
   }
 
-  // pad one pixel
-  var boardWidth = containerWidth - 1;
+  var boardWidth = containerWidth;
 
   while (boardWidth % 8 !== 0 && boardWidth > 0) {
     boardWidth--;
@@ -1287,6 +1286,14 @@ widget.config = function(arg1, arg2) {
   }
 };
 */
+
+widget.set = function(key, value) {
+    if (cfg.hasOwnProperty(key)) {
+        cfg[key] = value;
+    } else {
+        error(1000, 'Invalid config key.', key);
+    }
+};
 
 // remove the widget from the page
 widget.destroy = function() {
