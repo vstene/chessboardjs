@@ -340,7 +340,7 @@ function checkDeps() {
     }
 
     // make sure the container element exists in the DOM
-    var el = document.getElementById(containerElOrId);
+    var el = $(containerElOrId);
     if (! el) {
       window.alert('ChessBoard Error 1002: Element with id "' +
         containerElOrId + '" does not exist in the DOM.' +
